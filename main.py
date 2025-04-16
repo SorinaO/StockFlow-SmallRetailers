@@ -3,6 +3,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 
+
+
+# 🔁 Add this counter to help reset the quantity input field
+if "quantity_reset_counter" not in st.session_state:
+    st.session_state.quantity_reset_counter = 0  # 🔁 Used to force quantity input to reset
+
 # 📦 Sample stock data with categories
 stock_data = {
     'Product': ['T-Shirt', 'Jeans', 'Jacket', 'Shoes', 'Hat'],
@@ -20,6 +26,31 @@ if 'df' not in st.session_state:
     st.session_state.df = pd.DataFrame(stock_data)  # Load the data
     st.session_state.last_selected_product = None   # Track the last selected product
     st.session_state.movement_log = []              # Keep track of stock movements
+
+
+# Export stock data and movement logs as CSV
+def export_data():
+    st.subheader("Export Data")
+
+    # Export stock data
+    csv_stock = st.session_state.df.to_csv(index=False).encode('utf-8')
+    st.download_button(
+        label="Export Stock Data as CSV",
+        data=csv_stock,
+        file_name="stock_data.csv",
+        mime="text/csv"
+        )
+    
+    #Export movement log
+    if st.session_state.movement_log:
+        csv_log = pd.DataFrame(st.session_state.movement_log).to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="Export Movement Log as CSV",
+            data=csv_log,
+            file_name="movement_log.csv",
+            mime="text/csv"
+        )
+
 
 # 📊 Show current stock with optional category filter
 def display_current_stock_overview(key_suffix=""):
@@ -46,8 +77,18 @@ def log_stock_movement():
 
     product = st.selectbox("Select Product", st.session_state.df["Product"].tolist(), key = "product_select")
     movement_type = st.selectbox("Movement Type", ["New Stock Arrival", "Customer Return", "Customer Order", "Damaged", "Discrepancy", "Supplier Return"], key="movement_type")
-    quantity = st.number_input("Quantyty", min_value=1, max_value=500, value=1, key="quantity_input")
-        
+
+    
+    # Dynamically reset the quantity input field using a session state counter
+    quantity_key = f"quantity_input_{st.session_state.quantity_reset_counter}"
+    quantity = st.number_input(
+        "Quantity", 
+        min_value=1, 
+        max_value=500, 
+        value=1, 
+        key=quantity_key  # Dynamic key ensures reset
+    )
+    
     if st.button("Submit Movement"):
         # Determine sign of the quantity change
         if movement_type in["New Stock Arrival", "Customer Return"]:
@@ -63,6 +104,11 @@ def log_stock_movement():
                                                  "Quantity": quantity,
                                                    "Time": time.strftime("%Y-%m-%d %H:%M:%S")
                                                    })
+        
+        st.success(f"Logged {movement_type} of {quantity} for {product}.")
+        time.sleep(2)  # Optional: Add a small delay for user feedback
+        st.session_state.quantity_reset_counter += 1
+        st.rerun()  # Force the app to rerun to refresh the UI
 
 
 # 📘 View movement log
@@ -72,12 +118,14 @@ def view_movement_log():
         log_df = pd.DataFrame(st.session_state.movement_log)
         st.dataframe(log_df)
 
+
 # 🚀 MAIN APP
 def main():
     st.title("StockFlow - Small Retailers")
     display_current_stock_overview(key_suffix="main") # 👁️ View the current stock with filters
     log_stock_movement()                              # ➕➖ Log inbound/outbound movements
     view_movement_log()                               # 📘 Log of all recent stock movements
+    export_data()                                     # Call the export_data function
 
 if __name__ == "__main__":
     main()
