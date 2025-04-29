@@ -1,0 +1,8 @@
+Product,Category,Stock Level,Min Stock Level,Location
+T-Shirt,Clothing,174,40,A1
+Jeans,Clothing,285,100,B2
+Jacket,Clothing,33,20,C3
+Shoes,Footwear,110,50,D4
+Hat,Accessories,86,60,E5
+Sunglasses,Accessories,44,20,F6
+Backpack,Accessories,4,5,G7

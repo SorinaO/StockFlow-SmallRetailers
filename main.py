@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import time
 import plotly.express as px # for data visualisation
+from datetime import datetime
+import bcrypt  # For password hashing
+import psycopg2
 
 
 # Initialize session state variables
@@ -9,6 +12,12 @@ if "logged_in" not in st.session_state:
     st.session_state.logged_in = False  # Tracks whether the user is logged in
 if "username" not in st.session_state:
     st.session_state.username = None
+if "quantity_reset_counter" not in st.session_state:
+    st.session_state.quantity_reset_counter = 0 # Used to reset quantity input 
+
+
+# Hardcoded credentials (hashed password)
+HASHED_PASSWORD = bcrypt.hashpw("password".encode('utf-8'), bcrypt.gensalt())
 
 
 # Function to load the data from CSV
@@ -29,9 +38,10 @@ def login_form():
     st.title("Login")
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
+
     if st.button("Login"):
         # Simple hardcoded credentials for demonstration purposes
-        if username == "admin" and password == "password":
+        if username == "admin" and bcrypt.checkpw(password.encode('utf-8'), HASHED_PASSWORD):
             st.session_state.logged_in = True
             st.session_state.username = username
             st.success("Login successful!")
@@ -42,9 +52,15 @@ def login_form():
 
 # 🔒 Logout Functionality
 def logout():
-    st.session_state.logged_in = False
-    st.session_state.username = None
-    st.rerun()
+    if st.session_state.logged_in:
+        confirm_logout = st.sidebar.button("Logout")
+        if confirm_logout:
+            st.session_state.logged_in = False
+            st.session_state.username = None
+            st.success("You Have been logged out.")
+            time.sleep(2)
+            st.rerun() # Refresh the app to return to the login screen
+
 
 # 🔁 Add this counter to help reset the quantity input field
 if "quantity_reset_counter" not in st.session_state:
@@ -100,9 +116,41 @@ def visualise_stock_trends():
             y="Quantity",
             color="Product",
             title="Stock Movements Over Time",
-            labels={"Quantity": "Movement Quantity"}
+            labels={"Quantity": "Movement Quantity"},
+            color_discrete_sequence=px.colors.qualitative.Plotly,
+            custom_data=["Movement Type"]   # Pass movement type to customdat
         )
+
+        # Add hover tooltips
+        fig2.update_traces(hovertemplate="Time: %{x|%y-%m-%d %H:%M:%S}<br>Product: %{legend}<br>Movement Type:%{customdata[0]}<br>Quantity: %{y}")
+
+        # Add a brief explanation
+        st.markdown("### Stock Movements Over Time")
+        st.write("This chart shows how stock levels have changed over time for each product doe to sales or restocks")
+
+        # Display the chart
         st.plotly_chart(fig2)
+
+        # Optional: Add a summary table with the date included
+        current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Get the current date and time
+
+        # Optional: Add a summary table
+        summary_df = pd.DataFrame({
+            'Metric': [
+                'Total Sales',
+                  'Total Restocks (Stock Arrivals)',
+                    'Total Returns',
+                    "Total Discrepancies"
+            ],
+            'Value': [
+                log_df[log_df['Movement Type'] == 'Customer Order']['Quantity'].sum(),
+                log_df[log_df['Movement Type'] == 'New Stock Arrival']['Quantity'].sum(),
+                log_df[log_df['Movement Type'] == 'Customer Return']['Quantity'].sum(),
+                log_df[log_df['Movement Type'] == 'Discrepancy']['Quantity'].sum()
+            ],
+            "Last Updated": [current_date] * 4 # Update to include four rows
+        })
+        st.table(summary_df)
 
 
 # Export stock data and movement logs as CSV
@@ -238,7 +286,7 @@ def view_movement_log():
 # 🚀 MAIN APP
 def main():
     # Debugging: Display logged-in status
-    st.write("Logged In Status:", st.session_state.logged_in)
+    # st.write("Logged In Status:", st.session_state.logged_in)
 
     # Check if the user is logged in
     if not st.session_state.logged_in:
@@ -246,8 +294,7 @@ def main():
     else:
         # Add a welcome message and logout button
         st.sidebar.write(f"Welcome, {st.session_state.username}!")
-        st.sidebar.button("Logout", on_click=lambda: logout())  # Add a logout button
-        if st.sidebar.button("Force Logout"):  # Debugging button
+        if st.sidebar.button("Logout"):  # Debugging button
             logout()
 
         st.title("StockFlow - Small Retailers")
