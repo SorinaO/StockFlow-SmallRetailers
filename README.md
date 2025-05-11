@@ -32,7 +32,7 @@ Low Stock Alerts : Get warnings when inventory falls below thresholds.
 ![Movement Logs](screenshot/Log_Stock_Movement.jpg)  
 *Log Stock Movements.*<br><br>
 
-![Historical Stock Movements](screenshot/Historical_Stock_Movements.jpg)<br><br>
+![Historical Stock Movements](screenshot/Historical_Stock_Movements.jpg)<br>
 *Historical stock movements.*<br><br>
 
 ## 📊 Sample Data Included
