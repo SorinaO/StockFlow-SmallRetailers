@@ -3,22 +3,6 @@ import pandas as pd
 import time
 import plotly.express as px # for data visualisation
 from datetime import datetime
-import bcrypt  # For password hashing
-import psycopg2
-
-
-# Initialize session state variables
-if "logged_in" not in st.session_state:
-    st.session_state.logged_in = False  # Tracks whether the user is logged in
-if "username" not in st.session_state:
-    st.session_state.username = None
-if "quantity_reset_counter" not in st.session_state:
-    st.session_state.quantity_reset_counter = 0 # Used to reset quantity input 
-
-
-# Hardcoded credentials (hashed password)
-HASHED_PASSWORD = bcrypt.hashpw("password".encode('utf-8'), bcrypt.gensalt())
-
 
 # Function to load the data from CSV
 def load_data_from_csv(filename = "stock_data.csv"):
@@ -31,36 +15,6 @@ def load_data_from_csv(filename = "stock_data.csv"):
 # Function to save data to CSV
 def save_data_to_csv(df, filename="stock_data.csv"):
     df.to_csv(filename, index=False)
-    
-
-# 🔒 Login Form
-def login_form():
-    st.title("Login")
-    username = st.text_input("Username")
-    password = st.text_input("Password", type="password")
-
-    if st.button("Login"):
-        # Simple hardcoded credentials for demonstration purposes
-        if username == "admin" and bcrypt.checkpw(password.encode('utf-8'), HASHED_PASSWORD):
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.success("Login successful!")
-            time.sleep(2)
-            st.rerun()
-        else:
-            st.error("Invalid username or password")
-
-# 🔒 Logout Functionality
-def logout():
-    if st.session_state.logged_in:
-        confirm_logout = st.sidebar.button("Logout")
-        if confirm_logout:
-            st.session_state.logged_in = False
-            st.session_state.username = None
-            st.success("You Have been logged out.")
-            time.sleep(2)
-            st.rerun() # Refresh the app to return to the login screen
-
 
 # 🔁 Add this counter to help reset the quantity input field
 if "quantity_reset_counter" not in st.session_state:
@@ -90,7 +44,10 @@ if 'df' not in st.session_state:
 
 
 def visualise_stock_trends():
-    st.subheader("Stock Trends")
+    st.subheader("Stock Levels and Trends")
+
+    # Create two columns for side-by-side charts
+    col1, col2 = st.columns(2)
 
     # Bar chart: Stock levels by product and category
     fig = px.bar(
@@ -102,7 +59,9 @@ def visualise_stock_trends():
         labels={"Stock Level": "Current Stock Level"}
     )
 
-    st.plotly_chart(fig)
+    # Display bar chart in the left column
+    with col1:
+        st.plotly_chart(fig, use_container_width=True)
 
     # Line chart: Stock levels over time (if movement logs exist)
     if st.session_state.movement_log:
@@ -115,21 +74,18 @@ def visualise_stock_trends():
             x="Time",
             y="Quantity",
             color="Product",
-            title="Stock Movements Over Time",
+            title="Historical Stock Movements Over Time",
             labels={"Quantity": "Movement Quantity"},
             color_discrete_sequence=px.colors.qualitative.Plotly,
             custom_data=["Movement Type"]   # Pass movement type to customdat
         )
 
-        # Add hover tooltips
+# Add hover tooltips
         fig2.update_traces(hovertemplate="Time: %{x|%y-%m-%d %H:%M:%S}<br>Product: %{legend}<br>Movement Type:%{customdata[0]}<br>Quantity: %{y}")
 
-        # Add a brief explanation
-        st.markdown("### Stock Movements Over Time")
-        st.write("This chart shows how stock levels have changed over time for each product doe to sales or restocks")
-
-        # Display the chart
-        st.plotly_chart(fig2)
+        # Display line chart in the right column
+        with col2:
+            st.plotly_chart(fig2, use_container_width=True)
 
         # Optional: Add a summary table with the date included
         current_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Get the current date and time
@@ -151,7 +107,6 @@ def visualise_stock_trends():
             "Last Updated": [current_date] * 4 # Update to include four rows
         })
         st.table(summary_df)
-
 
 # Export stock data and movement logs as CSV
 def export_data():
@@ -175,7 +130,6 @@ def export_data():
             file_name="movement_log.csv",
             mime="text/csv"
         )
-
 
 # Upload Data Feature       
 def upload_data():
@@ -285,18 +239,6 @@ def view_movement_log():
 
 # 🚀 MAIN APP
 def main():
-    # Debugging: Display logged-in status
-    # st.write("Logged In Status:", st.session_state.logged_in)
-
-    # Check if the user is logged in
-    if not st.session_state.logged_in:
-        login_form()
-    else:
-        # Add a welcome message and logout button
-        st.sidebar.write(f"Welcome, {st.session_state.username}!")
-        if st.sidebar.button("Logout"):  # Debugging button
-            logout()
-
         st.title("StockFlow - Small Retailers")
         display_current_stock_overview(key_suffix="main")  # 👁️ View the current stock with filters
         log_stock_movement()                              # ➕➖ Log inbound/outbound movements
@@ -304,8 +246,6 @@ def main():
         export_data()                                     # Call the export_data function
         visualise_stock_trends()                          # Visualise Stock Trends
         upload_data()                                     # Add the upload data feature
-
-
 
 if __name__ == "__main__":
     main()

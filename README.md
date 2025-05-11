@@ -1,49 +1,67 @@
-## StockFlow
+## StockFlow - Small Retailers
+A lightweight inventory management app for small businesses.<br><br>
 
-StockFlow is a Streamlit-based web application designed to help you manage and monitor your warehouse stock levels. It provides features for displaying current stock levels, alerting you when stock is low, forecasting future stock requirements, logging stock movements, and visualizing stock trends.
+## 🔍 What It Does
+StockFlow helps small retailers track inventory levels, log stock movements (sales, restocks, returns), and visualize trends—all in real-time.<br><br>
 
-## Features
+## 🚀 Try It Live
+🔗 [Live Demo on Streamlit Cloud](https://stockflow-app.streamlit.app)
 
-- **Current Stock Overview**: Displays the current stock levels for all products.
-- **Low Stock Alerts**: Alerts you when stock levels fall below the minimum threshold.
-- **Forecast Future Stock Requirements**: Predicts future stock levels based on a user-defined forecast period.
-- **Log Stock Movements**: Allows you to log various stock movements such as restocking, sales, and discrepancies.
-- **Stock Movement History**: Displays a history of all logged stock movements with filtering options.
-- **Stock Level Trends**: Visualizes stock level trends over time.
-Project Structure
-main.py: The main script containing the Streamlit app code.
-requirements.txt: A file listing the required Python packages.
+Interact with the app directly in your browser—no installation required. <br><br>
+
+## 🧾 Key Features
+Track Stock Levels : View current inventory by product and category.
 
 
-How It Works
-Current Stock Overview
-Displays the current stock levels for all products, including product name, stock level, minimum stock level, and location.
+Log Movements : Record sales, restocks, returns, and discrepancies.
 
-Low Stock Alerts
-Alerts you when stock levels fall below the minimum threshold. Provides a warning message for each product that needs restocking.
 
-Forecast Future Stock Requirements
-Allows you to select a forecast period (in days) using a slider. Predicts future stock levels based on a simple linear model that assumes a constant rate of stock depletion.
+Visualize Trends : Side-by-side charts show stock levels and historical movement trends.
 
-Log Stock Movements
-Enables you to log various stock movements such as restocking, sales, and discrepancies. Adjusts stock levels accordingly and records the movement in the stock history.
 
-Stock Movement History
-Displays a history of all logged stock movements. Includes filtering options to view specific types of movements.
+CSV Import/Export : Easily back up or update data via CSV files.
 
-Stock Level Trends
-Visualizes stock level trends over time using a line chart. Helps you understand stock usage patterns and make better forecasting decisions.
 
-Contributing
-Contributions are welcome! Please feel free to submit a pull request or open an issue if you have any suggestions or improvements.
+Low Stock Alerts : Get warnings when inventory falls below thresholds.
 
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
 
-Requirements:
-Streamlit
-Pandas
-Matplotlib
-NumPy
+## 📸 Screenshots  
+![Stock Levels Chart](screenshot/Stock_Levels_Chart.jpg)  
+*Current stock levels by product and category.*
 
-Streamlit Cloud: https://stockflow-app.streamlit.app
+![Movement Logs](screenshots/Log_Stock_Movement.jpg)  
+*Log Stock Movements.*
+
+![Historical Stock Movements](screenshot/Historical_Stock_Movements.jpg)<br><br>
+*Historical stock movements with hover tooltips.*
+
+## 📊 Sample Data Included
+This app includes fake/sample data for demonstration purposes only.
+
+stock_data.csv: Sample stock levels.
+movement_log.csv: Example stock movement logs.
+⚠️ These files are for showcasing the app’s UI. Replace them with your own data for real-world use. <br><br>
+
+
+## 📄 License
+StockFlow - Small Retailers is protected under the following license:
+
+Copyright (c) 2025 Sorina Oanta
+
+This software is provided for demonstration and non-commercial use only.
+For commercial use or redistribution, contact oantas@yahoo.com<br><br>
+
+
+## 📌 Notes for Users
+This app is designed for small retailers to manage inventory efficiently. If you'd like to:
+
+Request custom features (e.g., database integration, multi-user access).
+Integrate with your existing systems,
+📧 Contact us at oantas@yahoo.com for licensing or customization.<br><br>
+
+## 🧰 Tech Stack  
+- **Frontend**: [Streamlit](https://streamlit.io/ )  
+- **Data Visualization**: [Plotly Express](https://plotly.com/python/ )  
+- **Data Handling**: [Pandas](https://pandas.pydata.org/ )<br><br> 
+
+
