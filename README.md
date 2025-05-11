@@ -27,13 +27,13 @@ Low Stock Alerts : Get warnings when inventory falls below thresholds.
 
 ## 📸 Screenshots  
 ![Stock Levels Chart](screenshot/Stock_Levels_Chart.jpg)  
-*Current stock levels by product and category.*
+*Current stock levels by product and category.*<br><br>
 
 ![Movement Logs](screenshot/Log_Stock_Movement.jpg)  
-*Log Stock Movements.*
+*Log Stock Movements.*<br><br>
 
-![Historical Stock Movements](screenshot/Historical_Stock_Movements.jpg)<br><br>
-*Historical stock movements with hover tooltips.*
+![Historical Stock Movements](screenshot/Historical_Stock_Movements.jpg)
+*Historical stock movements with hover tooltips.*<br><br>
 
 ## 📊 Sample Data Included
 This app includes fake/sample data for demonstration purposes only.
