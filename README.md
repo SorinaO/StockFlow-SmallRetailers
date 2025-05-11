@@ -33,7 +33,7 @@ Low Stock Alerts : Get warnings when inventory falls below thresholds.
 *Log Stock Movements.*<br><br>
 
 ![Historical Stock Movements](screenshot/Historical_Stock_Movements.jpg)
-*Historical stock movements.*<br><br>
+*Historical stock movements.*
 
 ## 📊 Sample Data Included
 This app includes fake/sample data for demonstration purposes only.
