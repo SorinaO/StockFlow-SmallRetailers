@@ -5,7 +5,7 @@ A lightweight inventory management app for small businesses.<br><br>
 StockFlow helps small retailers track inventory levels, log stock movements (sales, restocks, returns), and visualize trends—all in real-time.<br><br>
 
 ## 🚀 Try It Live
-🔗 [Live Demo on Streamlit Cloud]([https://stockflow-smallretailers.streamlit.app])
+🔗 [Live Demo on Streamlit Cloud][https://stockflow-smallretailers.streamlit.app]
 
 Interact with the app directly in your browser—no installation required. <br><br>
 
