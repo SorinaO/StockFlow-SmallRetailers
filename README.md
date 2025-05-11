@@ -29,7 +29,7 @@ Low Stock Alerts : Get warnings when inventory falls below thresholds.
 ![Stock Levels Chart](screenshot/Stock_Levels_Chart.jpg)  
 *Current stock levels by product and category.*
 
-![Movement Logs](screenshots/Log_Stock_Movement.jpg)  
+![Movement Logs](screenshot/Log_Stock_Movement.jpg)  
 *Log Stock Movements.*
 
 ![Historical Stock Movements](screenshot/Historical_Stock_Movements.jpg)<br><br>
